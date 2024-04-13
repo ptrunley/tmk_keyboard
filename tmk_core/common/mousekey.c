@@ -111,10 +111,14 @@ void mousekey_task(void)
     if (mouse_report.y > 0) mouse_report.y = move_unit();
     if (mouse_report.y < 0) mouse_report.y = move_unit() * -1;
 
-    /* diagonal move [1/sqrt(2) = 0.7] */
+    /*
+     * diagonal move [1/sqrt(2) = 0.70710678]
+     * use scaled (*256) integer arithmetic and round the result
+     * 181/256 = 0.707031
+     */
     if (mouse_report.x && mouse_report.y) {
-        mouse_report.x *= 0.7;
-        mouse_report.y *= 0.7;
+        mouse_report.x = ((mouse_report.x * 181) + 128) >> 8;
+        mouse_report.y = ((mouse_report.y * 181) + 128) >> 8;
     }
 
     if (mouse_report.v > 0) mouse_report.v = wheel_unit();
